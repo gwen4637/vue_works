@@ -87,8 +87,8 @@
                 </div>
               </div>
             </div>
-            <template>
-              <img src="" alt="" class="images m-2">
+            <template v-if="tempProduct.imagesUrl.length">
+              <img :src="item" alt="" class="images m-2" v-for="item in tempProduct.imagesUrl" :key="item">
             </template>
           </template>
           <p v-else class="text-secondary">請選擇一個商品查看</p>
