@@ -22,7 +22,6 @@ const app = {
             const url = `${this.site}api/user/check`;
             axios.post(url)
             .then((res)=>{
-                console.log(res.data);
                 this.getProduct();
             })
             .catch((err)=>{
@@ -33,10 +32,8 @@ const app = {
         //取得商品列表
         getProduct(){
             const url = `${this.site}api/${this.path}/admin/products`;
-            // console.log(url);
             axios.get(url)
             .then((res)=>{
-                // console.log(res.data.products);
                 this.products = res.data.products;
             })
             .catch((err)=>{
