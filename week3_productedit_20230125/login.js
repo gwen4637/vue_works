@@ -13,7 +13,6 @@ const app = {
     },
     methods:{
         login(){
-            // console.log(this.user);
             const url = `${this.site}admin/signin`
             axios.post(url,this.user)
             .then((res)=>{

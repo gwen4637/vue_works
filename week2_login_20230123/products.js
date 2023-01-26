@@ -14,7 +14,6 @@ const app = {
             const url = `${this.site}api/user/check`;
             axios.post(url)
             .then((res)=>{
-                console.log(res.data);
                 this.getProducts();
             })
             .catch((err)=>{

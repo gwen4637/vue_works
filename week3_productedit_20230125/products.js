@@ -44,17 +44,17 @@ const app = {
         openModal(status,product){
             if(status == 'create'){
                 this.isNew = true;
-                productModal.show();
-                this.tempProducts = {
+                this.tempProduct = {
                     imagesUrl:[],
                 };
+                productModal.show();
             }else if(status == 'edit'){
                 this.isNew = false;
+                this.tempProduct = {...product};
                 productModal.show();
-                this.tempProduct = {...product}
             }else if(status == 'delete'){
+                this.tempProduct = {...product};
                 delProductModal.show();
-                this.tempProduct = {...product}
             }
         },
         //更新商品列表 //新增//編輯
