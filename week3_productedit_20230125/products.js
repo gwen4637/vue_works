@@ -1,0 +1,108 @@
+import { createApp } from 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.1.4/vue.esm-browser.min.js';
+
+let productModal = '';
+let delProductModal = '';
+
+
+const app = {
+    data(){
+        return{
+            site:'https://vue3-course-api.hexschool.io/v2/',
+            path:'gwen-hexschool-class',
+            products:{},
+            tempProduct:{
+                imagesUrl:[],
+            },
+            isNew:false,
+        }
+    },
+    methods:{
+        //登入check
+        checkLogin(){
+            const url = `${this.site}api/user/check`;
+            axios.post(url)
+            .then((res)=>{
+                console.log(res.data);
+                this.getProduct();
+            })
+            .catch((err)=>{
+                alert(err.data.message);
+                window.location = 'login.html';
+            })
+        },
+        //取得商品列表
+        getProduct(){
+            const url = `${this.site}api/${this.path}/admin/products`;
+            // console.log(url);
+            axios.get(url)
+            .then((res)=>{
+                // console.log(res.data.products);
+                this.products = res.data.products;
+            })
+            .catch((err)=>{
+                alert(err.data.message);
+            })
+        },
+        //openModel
+        openModal(status,product){
+            if(status == 'create'){
+                this.isNew = true;
+                productModal.show();
+                this.tempProducts = {
+                    imagesUrl:[],
+                };
+            }else if(status == 'edit'){
+                this.isNew = false;
+                productModal.show();
+                this.tempProduct = {...product}
+            }else if(status == 'delete'){
+                delProductModal.show();
+                this.tempProduct = {...product}
+            }
+        },
+        //更新商品列表 //新增//編輯
+        updateProduct(){
+            let url = `${this.site}api/${this.path}/admin/product`;
+            let method = 'post';
+
+            //edit
+            if(this.isNew == false){
+                url = `${this.site}api/${this.path}/admin/product/${this.tempProduct.id}`;
+                method = 'put';
+            }
+            axios[method](url,{data:this.tempProduct})
+            .then((res)=>{
+                this.getProduct();
+                alert(res.data.message);
+                productModal.hide();
+            })
+            .catch((err)=>{
+                alert(err.data.message);
+            })
+        },
+        //刪除商品
+        deleteProduct(){
+            const url = `${this.site}api/${this.path}/admin/product/${this.tempProduct.id}`;
+            axios.delete(url)
+            .then((res)=>{
+                this.getProduct();
+                alert(res.data.message);
+                delProductModal.hide();
+            })
+            .catch((err)=>{
+                alert(err.data.message);
+            })
+        }
+    },
+    mounted(){
+        const token = document.cookie.replace(/(?:(?:^|.*;\s*)gwenCookie\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+        axios.defaults.headers.common['Authorization'] = token;
+        this.checkLogin();
+
+        // openModel 初始化
+        productModal = new bootstrap.Modal('#productModal');
+        delProductModal = new bootstrap.Modal('#delProductModal');
+    }
+}
+
+createApp(app).mount("#app");
